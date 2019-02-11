@@ -6,8 +6,6 @@ defaultEntryPoints = ["https","http"]
 [entryPoints]
   [entryPoints.http]
   address = ":80"
-  [entryPoints.http.redirect]
-  entryPoint = "https"
   [entryPoints.https]
   address = ":443"
   [entryPoints.https.tls]
@@ -22,11 +20,11 @@ exposedbydefault = false
 
 [acme]
 email = "support@maincoin.money"
-storage = "/home/explorer/acme.json"
+storage = "/acme.json"
 entryPoint = "https"
 OnHostRule = true
 usebindportip = true
-acmeLogging = true 
+acmeLogging = true
 onDemand = false #create certificate when container is created
   [acme.dnsChallenge]
   provider = "cloudflare"
