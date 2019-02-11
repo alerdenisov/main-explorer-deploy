@@ -89,8 +89,7 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ../config/traefik.toml:/etc/traefik/traefik.toml:ro
-      - ../config/acme.json:/acme.json
+      - ./traefik.toml:/etc/traefik/traefik.toml:ro
     networks:
       default:
         aliases:
