@@ -1,0 +1,6 @@
+[submodule "modules/backend"]
+	path = modules/backend
+	url = https://github.com/alerdenisov/main-explorer-backend-2.git
+[submodule "modules/frontend"]
+	path = modules/frontend
+	url = https://github.com/alerdenisov/main-explorer-frontend.git
