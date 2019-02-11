@@ -31,8 +31,6 @@ services:
     depends_on:
       - mysql
       - redis
-    volumes:
-      - ./src:/usr/src/app/src
     build:
       context: modules/backend
     environment:
@@ -52,8 +50,6 @@ services:
     depends_on:
       - mysql
       - redis
-    volumes:
-      - ./src:/usr/src/app/src
     build:
       context: modules/backend
     environment:
