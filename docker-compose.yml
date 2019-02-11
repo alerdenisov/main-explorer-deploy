@@ -39,6 +39,10 @@ services:
       DATABASE_USER: user
       DATABASE_PASSWORD: password
       REDIS_URL: redis://redis:6379
+    expose:
+      - 4000
+    ports:
+      - 4000:4000
     labels:
       traefik.enable: true
       traefik.frontend.rule: "Host: api.maincoin.money"
@@ -70,6 +74,8 @@ services:
       BACKEND_URL: https://api.maincoin.money
     expose:
       - 3000
+    ports:
+      - 3000:3000
     labels:
       traefik.enable: true
       traefik.frontend.rule: "Host: explorer.maincoin.money"
