@@ -1,0 +1,86 @@
+version: "3"
+services:
+  mysql:
+    image: mysql/mysql-server:5.7
+    restart: always
+    hostname: mysql
+    environment:
+      MYSQL_DATABASE: "db"
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: "user"
+      # You can use whatever password you like
+      MYSQL_PASSWORD: "password"
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: "password"
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./tmp/mysql:/var/lib/mysql
+
+  redis:
+    # docker run --rm -p 6379:6379 -e  --name merch_redis bitnami/redis:latest
+    image: bitnami/redis:latest
+    hostname: redis
+    expose:
+      - 6379
+    ports:
+      - 6379:6379
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+
+  api:
+    image: alerdenisov/main-explorer-backend:latest
+    depends_on:
+      - mysql
+      - redis
+    build:
+      context: modules/backend
+    volumes:
+      - ./modules/backend/src:/usr/src/app/src
+    environment:
+      PORT: 4000
+      DATABASE_HOST: mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      REDIS_URL: redis://redis:6379
+    expose:
+      - 4000
+    ports:
+      - 4000:4000
+    command: /bin/sh dev-run.sh api
+
+  exporter:
+    image: alerdenisov/main-explorer-backend:latest
+    depends_on:
+      - mysql
+      - redis
+    build:
+      context: modules/backend
+    volumes:
+      - ./modules/backend/src:/usr/src/app/src
+    environment:
+      # FORCE_HEAL_TO: 7208021
+      DATABASE_HOST: mysql
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      REDIS_URL: redis://redis:6379
+    command: /bin/sh dev-run.sh exporter
+
+  frontend:
+    build:
+      context: modules/frontend
+    image: alerdenisov/main-explorer-frontend:latest
+    depends_on:
+      - api
+    environment:
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+      HOST: 0.0.0.0
+      PORT: 3000
+      BACKEND_URL: http://localhost:4000
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    command: ["yarn", "start"]
